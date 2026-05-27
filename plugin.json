@@ -1,0 +1,48 @@
+{
+  "name": "plugin-ChronicleX-vite-svelte",
+  "author": "Aether",
+  "url": "https://github.com/wj1002/plugin-ChronicleX-vite-svelte",
+  "version": "0.3.1",
+  "minAppVersion": "3.2.1",
+  "disabledInPublish": false,
+  "backends": [
+    "windows",
+    "linux",
+    "darwin",
+    "ios",
+    "android",
+    "harmony",
+    "docker"
+  ],
+  "frontends": [
+    "desktop",
+    "mobile",
+    "browser-desktop",
+    "browser-mobile",
+    "desktop-window"
+  ],
+  "displayName": {
+    "default": "ChronicleX",
+    "zh_CN": "ChronicleX任务管理"
+  },
+  "description": {
+    "default": "ChronicleX plugin for SiYuan",
+    "zh_CN": "ChronicleX 思源笔记插件"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README_zh_CN.md"
+  },
+  "funding": {
+    "openCollective": "",
+    "patreon": "",
+    "github": "",
+    "custom": [
+      "https://ld246.com/sponsor"
+    ]
+  },
+  "keywords": [
+    "ChronicleX",
+    "编年史"
+  ]
+}

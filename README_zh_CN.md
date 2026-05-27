@@ -1,6 +1,6 @@
 # ChronicleX · 思源笔记日历事项插件
 
-[English](./README.md) | 简体中文
+[English](https://github.com/wj1002/plugin-ChronicleX-vite-svelte/blob/main/README.md) | 简体中文
 
 一个以**月历**为核心的「计划 + 回顾」插件,可以右键日子记录待办,完成后留痕,并能**一键关联思源文档**作为详情。
 
@@ -130,4 +130,4 @@
 
 ## ⚖️ 许可
 
-[MIT](./LICENSE) © Aether
+MIT © Aether

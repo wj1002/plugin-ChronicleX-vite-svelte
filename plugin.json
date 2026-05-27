@@ -26,20 +26,12 @@
     "zh_CN": "ChronicleX任务管理"
   },
   "description": {
-    "default": "ChronicleX plugin for SiYuan",
-    "zh_CN": "ChronicleX 思源笔记插件"
+    "default": "A month-calendar plan-and-review plugin with one-click SiYuan doc linking",
+    "zh_CN": "以月历为核心的计划+回顾插件,支持一键关联思源文档"
   },
   "readme": {
     "default": "README.md",
     "zh_CN": "README_zh_CN.md"
-  },
-  "funding": {
-    "openCollective": "",
-    "patreon": "",
-    "github": "",
-    "custom": [
-      "https://ld246.com/sponsor"
-    ]
   },
   "keywords": [
     "ChronicleX",

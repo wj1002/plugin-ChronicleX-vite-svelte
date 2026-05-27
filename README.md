@@ -1,6 +1,6 @@
 # ChronicleX · SiYuan Calendar & Task Plugin
 
-English | [简体中文](./README_zh_CN.md)
+English | [简体中文](https://github.com/wj1002/plugin-ChronicleX-vite-svelte/blob/main/README_zh_CN.md)
 
 A **calendar-centered planner** for SiYuan: right-click any day to log a task, track its status, and **link it to a SiYuan document** for detailed notes.
 
@@ -130,4 +130,4 @@ Deferred to future versions:
 
 ## ⚖️ License
 
-[MIT](./LICENSE) © Aether
+MIT © Aether

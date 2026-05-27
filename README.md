@@ -103,9 +103,8 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 ## 📋 Compatibility
 
 - Minimum SiYuan version: **3.2.1**
-- Primary tested: Windows / macOS / Linux desktop
-- Other platforms: desktop-window / mobile / browser-desktop / browser-mobile
-- Mobile: loads but not deeply optimized (swipe deferred to v4)
+- Supported platforms: **Windows / macOS** desktop only
+- Mobile and browser platforms are **not supported** at this time
 
 ---
 
@@ -123,7 +122,6 @@ Deferred to future versions:
 - Multi-window sync
 - Reverse doc-to-event lookup
 - Custom status names
-- Mobile deep optimization
 - Import / export
 
 ---

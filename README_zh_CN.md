@@ -103,9 +103,8 @@
 ## 📋 兼容性
 
 - 最低思源版本:**3.2.1**
-- 主测平台:Windows / macOS / Linux 桌面端
-- 其他平台:desktop-window / mobile / browser-desktop / browser-mobile
-- 移动端:能加载,未深度优化(swipe 列入 v4)
+- 支持平台:**Windows / macOS** 桌面端
+- 移动端及浏览器平台暂不支持
 
 ---
 
@@ -123,7 +122,6 @@
 - 多窗口实时同步
 - 从思源文档反向查事项
 - 自定义状态名
-- 移动端深度优化
 - 导入 / 导出
 
 ---

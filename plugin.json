@@ -6,12 +6,12 @@
   "minAppVersion": "3.2.1",
   "disabledInPublish": false,
   "backends": [
-    "windows",
-    "darwin"
+    "all"
   ],
   "frontends": [
     "desktop",
-    "desktop-window"
+    "desktop-window",
+    "browser-desktop"
   ],
   "displayName": {
     "default": "ChronicleX",

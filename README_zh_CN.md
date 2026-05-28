@@ -128,4 +128,4 @@
 
 ## ⚖️ 许可
 
-MIT © Aether
+All Rights Reserved © Aether

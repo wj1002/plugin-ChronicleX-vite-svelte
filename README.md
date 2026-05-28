@@ -128,4 +128,4 @@ Deferred to future versions:
 
 ## ⚖️ License
 
-MIT © Aether
+All Rights Reserved © Aether

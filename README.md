@@ -9,9 +9,14 @@ A **calendar-centered planner** for SiYuan: right-click any day to log a task, t
 ## ✨ Features
 
 ### 📅 Dual Entry Points
-- **Dock Sidebar**: Always-on right panel with mini calendar + today list + overdue banner
-- **Tab Full-Screen Month View**: 7×6 grid with colored dots per day (by priority)
-- **Top Bar Shortcut**: Click 📅 icon or press `⇧⌘L` / `Shift+Ctrl+L`
+- **Dock Sidebar**: Always-on right panel with mini calendar + selected-day list (left-click a mini cell to browse across days) + collapsible overdue group
+- **Tab Full-Screen Month View**: 7×6 grid (42 cells) with per-day **event title bars** (priority-colored left edge; up to 3 per cell + "+N"; done/cancelled dimmed but visible)
+- **Top-Bar Entry + Shortcut**: Click the 📅 top-bar icon to open the full-screen Tab; or trigger the command via `⇧⌘L` / `Shift+Ctrl+L`
+
+### 🖐️ Drag & Quick Actions
+- **Drag to reschedule**: In month view, drag an event bar to another cell to change its date — unified mouse (desktop) + touch (long-press); recurring instances are not draggable (use the edit dialog)
+- **Quick new-event button**: Each day cell shows a `+` on hover (top-right) to create an event on that day
+- **Click bar to edit / click blank for details**: Clicking a bar opens the editor; clicking the cell's blank area opens the day list
 
 ### ✅ Event Management
 - **4-State Status**: todo / doing / done / cancelled
@@ -30,8 +35,8 @@ A **calendar-centered planner** for SiYuan: right-click any day to log a task, t
 ### 🔁 Recurring Events
 - **Frequency**: Daily / Weekly / Monthly / Yearly
 - **Interval**: Every N days/weeks/months/years
-- **Filters**: By weekday / by month day / by month / by set position (e.g., "2nd Tuesday each month")
-- **End Conditions**: Repeat N times OR until date
+- **Filters**: By weekday (weekly) / by month day (monthly)
+- **End Conditions**: Never / Repeat N times / Until date
 - **Scope Editing**: Single instance / this date onward / entire sequence
 
 ### 🎨 iOS-Style UI
@@ -45,14 +50,17 @@ A **calendar-centered planner** for SiYuan: right-click any day to log a task, t
 - **Source**: NateScarlet/holiday-cn
 - **Local Cache**: Per-year storage in plugin storage
 - **Auto Update**: Configurable monthly/yearly/manual, 30-day threshold
-- **UI Integration**: 9 components including mini calendar, month view, dock, detail dialog
-- **Custom Settings**: Separate colors for holidays/compensatory workdays, toggleable
+- **休/班 (off/work) distinction**: Month cells show a 休 (day-off, red) / 班 (make-up workday, gray) badge next to the date + holiday name; the holiday bar and Dock chips use `休 …` / `班 …` prefixes so make-up workdays aren't shown like a holiday
+- **Colors**: day-off **soft red** / make-up workday **soft gray**, fully theme-tokenized for light/dark
+- **UI Integration**: Dock mini calendar / month-view DayCell / month-view banner / DayDetailDialog in sync
+- **Toggles**: Global on/off / show label / show holiday name
 
 ### 🔍 Search & Filter
-- **Keyword Search**: Title + notes fuzzy match with 250ms debounce
-- **Status Filter**: 4-state chips, defaults hide done/cancelled
+- **Keyword Search**: Title + notes fuzzy match (month-view toolbar)
+- **Status Filter**: 4-state chips control event-bar/dot opacity — selected at 100%, unselected dimmed (not hidden — you can still see "that day had something")
 - **Tag Filter**: Auto-collected from all events
-- **Day Detail Popover**: Left-click any day → event list → edit/create
+- **Day Detail Popover**: Left-click a cell's **blank area** → event list → edit/create
+- **Bind-Doc Search** (DocPicker): Title/full-text search with 250ms debounce
 
 ### 🗑️ Delete Function
 - **Delete Button**: Red circle on hover (always visible on mobile)
@@ -77,11 +85,12 @@ Once enabled:
 2. **Create event**:
    - Dock `+` button → quick today entry
    - Right-click any day → menu with create options
-   - Left-click any day → day detail popover → `+` inside
-3. **Open full view**: Click 📅 / press `⇧⌘L` / `Shift+Ctrl+L`
-4. **Link doc**: Click `+ Create doc` or `⊕ Bind existing doc` in editor
-5. **Toggle status**: Left-click `○` → `●`; right-click `○` → 4-state menu
-6. **Filter**: Toolbar chips + search box
+   - Top-right `+` on a cell → quick new event on that day; or left-click the cell's blank area → day detail popover → `+` inside
+3. **Reschedule**: In month view, just **drag an event bar** to the target cell (recurring events: use the edit dialog)
+4. **Open full view**: Click 📅 / press `⇧⌘L` / `Shift+Ctrl+L`
+5. **Link doc**: Click `+ Create doc` or `⊕ Bind existing doc` in editor
+6. **Toggle status**: Left-click `○` → `●`; right-click `○` → 4-state menu
+7. **Filter**: Toolbar chips + search box
 
 ---
 
@@ -96,7 +105,7 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 | Week starts on | Monday | First column of the calendar |
 | Show holidays | On | Display Chinese public holidays |
 | Holiday update | Monthly | Auto-fetch frequency |
-| Holiday colors | Red/blue | Customizable for holidays/compensatory workdays |
+| Show label / Show name | On | Toggle the 休/班 (off/work) badge and the holiday name on month cells |
 
 ---
 
@@ -108,14 +117,29 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Release History & Roadmap
 
-Completed: v0.1.0 base → v0.2.0 recurrence/delete/holidays → v0.3.0 iOS UI
+### Released
 
-Deferred to future versions:
+- **v0.5.1** (2026-05-29): Holiday display refinements — recolored holidays/make-up workdays (soft red / soft gray), added 休/班 (off/work) badges next to the date in month view (holiday name kept), make-up workdays no longer labeled like a holiday (`班` prefix instead of "(调休)"); unified across month cells, the holiday bar, and the Dock mini-calendar. Tests 166 → 169
+- **v0.5.0** (2026-05-29): Month-view dots upgraded to **draggable event title bars** — drag to reschedule (desktop); each day cell gets a quick "+" new-event button; introduces a unified Pointer Events drag foundation. Touch-drag logic is implemented but this release keeps `frontends` desktop-only (mobile not enabled, not device-verified) — deferred to a future overall mobile adaptation. Tests 151 → 166
+- **v0.4.2** (2026-05-29): Tech-debt cleanup — holiday config now normalized via a key whitelist (legacy deprecated fields auto-stripped), deprecated config fields physically removed, settings-panel lifecycle refactored, DayDetailDialog holiday chip tokenized. **No new user-facing features**; tests 146 → 151
+- **v0.4.1** (2026-05-28)
+  - Dock mini-calendar **click-to-jump**: click any day → today list switches to that day's events; selected non-today cells get a 1.5px primary outline ring; click the YYYY/MM header to jump back to today
+  - Month-view dots always visible: done/cancelled event dots no longer disappear — shown at low alpha so you can still see "that day had something" after checking off; filter chips switched from "filter dots" to "control dot opacity"
+  - Event editor **semantic-colored status & priority chips**: high=red, normal=blue, low=green; doing=blue, done=green, cancelled=gray — aligned with calendar dots and card status circles
+  - Holiday color fully theme-tokenized: mini-calendar shows holiday tint for the first time; month-view holiday/workday colors no longer hard-coded (clean in dark theme)
+  - Mini-calendar **larger geometry**: cell number 10→12px, today/selected circle 18→22px for better readability in narrow docks
+- **v0.4.0** (2026-05-28): Dock 4 regions unified into iOS Reminders style; event editor date/time inputs replaced with custom DatePicker/TimePicker (zero-dep, iOS-style); tests 125→132
+- **v0.3.0**: iOS-style UI full redesign (EventCard / EventEditor / DayDetailDialog and 6 other components)
+- **v0.2.0**: Recurring events / delete button / Chinese public holidays
+- **v0.1.0**: Base calendar + SiYuan doc linking
+
+See [CHANGELOG.md](CHANGELOG.md) for full release notes.
+
+### Deferred to future versions
 
 - Custom event colors
-- Drag to reschedule
 - Multi-day events (startDate + endDate)
 - Reminders / notifications
 - Week view / day view

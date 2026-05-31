@@ -163,6 +163,14 @@
 
 ---
 
+## ☕ 赞赏支持
+
+如果 ChronicleX 对你有帮助,欢迎请作者喝杯咖啡~
+
+![赞赏码](https://raw.githubusercontent.com/wj1002/plugin-ChronicleX-vite-svelte/main/zs2.png)
+
+---
+
 ## ⚖️ 许可
 
 All Rights Reserved © Aether

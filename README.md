@@ -163,6 +163,14 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 ---
 
+## ☕ Support
+
+If you find ChronicleX helpful, feel free to buy me a coffee — thank you for your support!
+
+![赞赏码](https://raw.githubusercontent.com/wj1002/plugin-ChronicleX-vite-svelte/main/zs2.png)
+
+---
+
 ## ⚖️ License
 
 All Rights Reserved © Aether

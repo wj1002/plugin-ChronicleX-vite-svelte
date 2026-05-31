@@ -22,6 +22,9 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 - **Runs on SiYuan mobile**: every desktop-only interaction has a touch path added, usable on the SiYuan mobile App / mobile browser (since v0.6.0)
 - **Long-press menu**: long-press a month-view day cell / mini-calendar cell / status button to open the same menu as desktop right-click (create / copy / full status switch)
 - **Swipe to delete**: iOS-style swipe-left on an event card reveals a delete action (swipe back to cancel)
+- **Bottom action bar + FAB**: a fixed bottom bar (today / search / filter) plus a bottom-right "＋" new-event FAB; the top filters move into a bottom sheet (v0.6.3)
+- **Drag to reorder**: in the day-detail dialog's sort mode, hold the ≡ handle to reorder that day's events, persisted (v0.6.4; recurring events sink to the bottom, not draggable)
+- **Narrow-screen dialog fit**: editor / doc picker / day detail / scope selector dialogs adapt their width on narrow phones without overflowing (v0.6.5)
 
 ### ✅ Event Management
 - **4-State Status**: todo / doing / done / cancelled
@@ -130,6 +133,9 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v0.6.5** (2026-05-31): **Narrow-screen dialog fit** — mobile dialogs (editor / doc picker / day detail / scope selector) now use a unified `92vw` container and `min(Xpx, 100%)` root min-width, no longer overflowing on narrow screens; one-point fix in `simpleDialog`, zero desktop side effects. Tests 233 → 237
+- **v0.6.4** (2026-05-31): Mobile **drag-to-reorder** — in the day-detail dialog, enter "sort mode" and drag the ≡ handle to reorder that day's events (fully manual, persisted; recurring events are not draggable and sink to the bottom); mobile-only, zero desktop side effects. Tests 214 → 233
+- **v0.6.3** (2026-05-31): Mobile **bottom action bar + FAB** — a fixed bottom bar (today / search / filter) plus a bottom-right "＋" FAB; the top search / status / tag filters move into a bottom sheet; zero desktop side effects. Tests 200 → 214
 - **v0.6.2** (2026-05-30): **Next-holiday countdown** in the month-view top bar — "N days until {holiday}", or "{holiday} · on holiday" when today is an off day; display-only, works on desktop and mobile.
 - **v0.6.1** (2026-05-30): Mobile **swipe-to-delete** — iOS-style swipe-left on an event card reveals a red delete action (tap to delete / swipe back to cancel — natural mis-tap protection), replacing the always-visible `−` button on mobile; zero desktop side effects (hover `−` unchanged). Tests 177 → 189
 - **v0.6.0** (2026-05-30): **Mobile enabled for the first time** — `frontends` now includes `mobile` / `browser-mobile`, so ChronicleX officially runs on SiYuan mobile; device walkthrough (via mobile browser to desktop SiYuan) passed with no functional blockers — core flows (month view / today list / create-edit / doc linking / holidays / long-press menu / drag-reschedule) all reachable and usable; settings dialog width adapts on narrow screens. Desktop unchanged. Narrow-screen layout polish and mobile-specific interactions deferred to later releases.

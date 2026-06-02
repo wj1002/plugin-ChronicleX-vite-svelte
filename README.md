@@ -25,6 +25,7 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 - **Bottom action bar + FAB**: a fixed bottom bar (today / search / filter) plus a bottom-right "＋" new-event FAB; the top filters move into a bottom sheet (v0.6.3)
 - **Drag to reorder**: in the day-detail dialog's sort mode, hold the ≡ handle to reorder that day's events, persisted (v0.6.4; recurring events sink to the bottom, not draggable)
 - **Narrow-screen dialog fit**: editor / doc picker / day detail / scope selector dialogs adapt their width on narrow phones without overflowing (v0.6.5)
+- **Narrow-screen layout polish**: on phones the month grid is denser (less padding, shorter cells), settings rows stack vertically with full-width controls, and the editor's time range wraps to its own full-width line (v0.6.6)
 
 ### ✅ Event Management
 - **4-State Status**: todo / doing / done / cancelled
@@ -39,6 +40,7 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 - **Bind Existing Doc**: Full-text search picker with 250ms debounce
 - **Unbind**: Only clears association, doesn't delete SiYuan doc
 - **Open Linked Doc**: Click 📄 to jump (toast on missing/deleted)
+- **Reverse lookup (v0.7.0, trigger fixed in v0.7.2)**: from a SiYuan **doc-tree right-click menu**, open "ChronicleX 关联事项 (N)" to list events linking to that doc; each row can edit the event or jump to its date on the calendar
 
 ### 🔁 Recurring Events
 - **Frequency**: Daily / Weekly / Monthly / Yearly
@@ -115,6 +117,9 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 | Default notebook | (unset) | Where "create doc" stores generated docs |
 | Default doc path | `/ChronicleX` | Relative path inside the notebook |
 | Week starts on | Monday | First column of the calendar |
+| Priority colors | red/blue/green | Pick a preset color per high/normal/low; event bars and editor follow in real time |
+| Enable reminders | On | Master switch for due-time system notifications |
+| All-day reminder time | 09:00 | Anchor time used to remind events that have no specific time |
 | Show holidays | On | Display Chinese public holidays |
 | Holiday update | Monthly | Auto-fetch frequency |
 | Show label / Show name | On | Toggle the 休/班 (off/work) badge and the holiday name on month cells |
@@ -133,6 +138,15 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v0.11.0** (2026-06-02): **Reminders / notifications** — events fire a system desktop notification at their due time (falls back to an in-app SiYuan message if permission is unavailable); per-event lead time set in the editor (timed: on time / 5·15·30·60 min·1 day before; all-day: same day / 1·2 days before, anchored to a global "all-day reminder time", default 09:00); settings gain a "提醒" group (global toggle + all-day time). Clicking a notification focuses SiYuan and opens that event's editor; reminders missed while SiYuan was closed are merged into one catch-up notification on next launch. Done/cancelled events don't fire; recurring events only remind their next instance. Tests 294 → 320
+- **v0.10.0** (2026-06-02): **Custom event colors** — a new "颜色" group in settings lets you pick a preset color (red/orange/yellow/green/blue/purple/pink/gray) for each of the high/normal/low priorities; clicking a swatch applies instantly. Event cards, month-view event bars, and the editor's priority control all follow, across month/week/day views and on mobile. Priority-level only (data model unchanged). Tests 276 → 294
+- **v0.9.0** (2026-06-01): **Import / Export (JSON backup & migration)** — a "数据" group in settings: export all events to JSON, import from JSON (merge by id / replace with confirm), with per-event validation that skips invalid entries and reports counts, plus an empty-import guard against accidental wipe; pure functions in `domain/io.ts`, events-only, desktop-first
+- **v0.8.1** (2026-06-01): **"Open" button for the linked doc** — the editor's "已绑定" row gains an "打开" button next to "解除" that opens the linked document tab via `openDoc` (keeps the editor dialog open so unsaved edits aren't lost; shows a message if the doc was deleted)
+- **v0.8.0** (2026-06-01): **Month / Week / Day view switching** — toolbar segmented control, choice persisted in `config.view`; week view is 7 columns (reuses DayCell, cross-column drag-to-reschedule, per-column scroll), day view is a single-day list (reuses EventCard, inline status/delete/edit); navigation unified to an anchor date stepping per view with a view-aware title; week/day views expand recurring events. "Jump to calendar" now lands on the day view
+- **v0.7.2** (2026-06-01): **Fix** — reverse-lookup menu item never appeared: v0.7.0 hooked `click-editortitleicon`, but recent SiYuan opens the emoji/icon picker (not a menu) on title-icon click. Rewired to `open-menu-doctree` (**doc-tree right-click menu**), reading docId from the clicked node's `data-node-id`, injected only for a single `doc`
+- **v0.7.1** (2026-06-01): **Fix** — long event titles no longer overflow and stretch their month-grid column (added `min-width:0` along the DayCell/EventBar grid+flex chain so titles truncate with `…` and column widths stay fixed)
+- **v0.7.0** (2026-06-01): **Reverse lookup: doc → events** — a SiYuan document's title-icon menu now shows "ChronicleX 关联事项 (N)", listing events whose `linkedDocId` points at that doc; each row can edit the event or jump to its date on the calendar (via a `focusDateStore` signal that works for both new and already-open calendar tabs). Completes the doc↔event bidirectional link. Tests 240 → 246
+- **v0.6.6** (2026-06-01): **Narrow-screen layout polish** — three mobile-only internal layout refinements: denser month grid (less padding/gap, `min-height` 90→60px, hidden holiday names yielding to the 休/班 badge), vertically-stacked settings rows with full-width controls, and the editor's time range wrapping to its own full-width line. All gated by `@media (pointer: coarse)` / `display:contents`, zero desktop side effects. Tests 237 → 240
 - **v0.6.5** (2026-05-31): **Narrow-screen dialog fit** — mobile dialogs (editor / doc picker / day detail / scope selector) now use a unified `92vw` container and `min(Xpx, 100%)` root min-width, no longer overflowing on narrow screens; one-point fix in `simpleDialog`, zero desktop side effects. Tests 233 → 237
 - **v0.6.4** (2026-05-31): Mobile **drag-to-reorder** — in the day-detail dialog, enter "sort mode" and drag the ≡ handle to reorder that day's events (fully manual, persisted; recurring events are not draggable and sink to the bottom); mobile-only, zero desktop side effects. Tests 214 → 233
 - **v0.6.3** (2026-05-31): Mobile **bottom action bar + FAB** — a fixed bottom bar (today / search / filter) plus a bottom-right "＋" FAB; the top search / status / tag filters move into a bottom sheet; zero desktop side effects. Tests 200 → 214
@@ -158,14 +172,9 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 ### Deferred to future versions
 
-- Custom event colors
 - Multi-day events (startDate + endDate)
-- Reminders / notifications
-- Week view / day view
 - Multi-window sync
-- Reverse doc-to-event lookup
 - Custom status names
-- Import / export
 
 ---
 

@@ -173,7 +173,7 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 
 If you find ChronicleX helpful, feel free to buy me a coffee — thank you for your support!
 
-![赞赏码](https://raw.githubusercontent.com/wj1002/plugin-ChronicleX-vite-svelte/main/zs2.png)
+![赞赏码](https://gitee.com/wj741208617/donate-page/raw/master/zs2.png)
 
 ---
 

@@ -6,6 +6,30 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.3.0] - 2026-06-03
+
+### Added
+
+- **农历重复事项**:事项可按**农历每年**重复(生日 / 忌日 / 纪念日),每年自动落在正确的公历日。重复编辑器在「每年」频率下多一个「农历」勾选 + 只读确认标签「农历八月十五」,**锚点农历月日由公历开始日自动换算**(无新增选择器)。农历固有边界已定策略:**闰月只在正月份触发一次**(正月号天然不命中闰月)、**月小无三十落该月最后一天**(廿九,不丢年)。复用现有 `interval`(每 N 农历年)/ `count` / `until`(公历结束日)与改/删范围(此条 / 未来 / 全部);提醒按**下一个公历实例**触发(horizon 加宽到 400 天覆盖农历年最大间隔)。旧公历重复事项零影响(`calendar` 缺省即公历,旧存档零迁移)。
+
+### 其它
+
+- 分层:`RecurrenceRule` 加可选 `calendar?: 'solar'|'lunar'` / `lunarMonth?` / `lunarDay?`;纯函数 `domain/lunar.ts#getLunarYmd`(公历→农历数字年月日)+ `domain/recurrence.ts#generateLunarYearlyOccurrences`(逐农历年反查公历,`lunar-javascript` 的 `Lunar.fromYmd`/`LunarMonth.fromYm`);`expandEventsInRange` 与 `reminder.ts#nextOccurrenceDate` 加农历分支(**公历路径零改动**)。subagent-driven 执行(6 task,domain 全 TDD;final review 准予合并)。测试 354 → **372**(getLunarYmd ×3 / 农历生成器 ×10 含闰六月2025真实闰月单触发 / expand 分支 ×1 / 提醒分支 ×1 / RecurrenceEditor ×3)。spec+plan 见 `docs/superpowers/{specs,plans}/2026-06-03-lunar-recurrence*`。**已知限制**:被单独编辑过的重复实例(`isRecurrenceException`)不单独触发提醒,仍按母序列下一个实例算(与既有重复一致)。
+
+---
+
+## [1.2.0] - 2026-06-03
+
+### Added
+
+- **多窗口同步(切窗即刷新)**:同设备多个思源窗口(拖出的独立窗口 / 第二个窗口)各自加载插件、各有独立事项 store,读写同一内核文件。窗口重新获得**焦点 / 变为可见**时从文件重载事项,使该窗所有视图(日历 / Dock / 日 / 周)自动刷新到最新。新增纯函数 `domain/sync.ts`(`eventsChanged`,按 id + updatedAt 比对)+ `store/events.ts#reloadEventsIfChanged`(本窗有未落盘写时跳过,防覆盖本地编辑)。仅事项;无 WebSocket / 轮询 / 新依赖。测试 343 → 354。
+
+### Fixed
+
+- **写状态守卫**:`hasPendingWrite` 原依赖 `pendingPromise`,写完不置 null 致任一编辑后永久非空、聚焦重载被永久跳过;改用 `dirty` 标志(写**成功**才清,失败保留以防 reload 用旧文件覆盖未落盘数据)。
+
+---
+
 ## [1.1.0] - 2026-06-03
 
 ### Added

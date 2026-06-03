@@ -138,6 +138,8 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v1.3.0** (2026-06-03): **Lunar recurring events** — events can recur every lunar year (birthdays / memorials / anniversaries), auto-landing on the correct Gregorian date each year. The recurrence editor shows a "农历" (lunar) checkbox under "yearly" plus a read-only confirm label "农历八月十五"; the anchor lunar month/day is auto-derived from the Gregorian start date. Leap months fire only in the regular month, day-30 clamps to the month's last day (廿九); reuses interval/count/until + this/future/all edit scope; reminders fire on the next Gregorian instance. Zero impact on existing solar recurrence. Tests 354 → 372
+- **v1.2.0** (2026-06-03): **Multi-window sync (refresh on focus)** — on the same device, multiple SiYuan windows each load the plugin independently; when a window regains focus / becomes visible it reloads events from the kernel file so that window's calendar / Dock / day / week views auto-refresh to the latest. Events only; no WebSocket / polling / new dependency. Pure `eventsChanged` change-detection + `reloadEventsIfChanged` (a guard prevents clobbering local unsaved edits). Tests 343 → 354
 - **v1.1.0** (2026-06-03): **Lunar calendar display** — lunar day + 24 solar terms + traditional festivals in month/week/day views (priority festival > solar-term > lunar-day, one shown; terms/festivals emphasized with accent color + bold); full lunar info in the day-view header; a "显示农历" settings toggle (default on). Powered by lunar-javascript, theme-following.
 - **v1.0.1** (2026-06-03): **Holiday color redesign** — off-days switch from SiYuan error-red to warning amber/gold (very light tint + amber "休" badge emphasis + neutral holiday-name text, ending the red overload); make-up workdays stay neutral gray; unified across month view / Dock / top holiday bar, designed via ui-ux-pro-max, theme-following. Also: plugin.json funding field; README feedback link moved to top, release history trimmed.
 - **v1.0.0** (2026-06-02): 🎉 **First stable release · full UI redesign (Soft UI + Bento)** — new form language: main calendar / editor / dialogs use Soft UI multi-layer soft shadows + stable hover; review dashboard / Dock use a Bento module grid (review widescreen: "distribution · overdue" side-by-side, "overview · heatmap" full-width); colors still alias SiYuan `var(--b3-*)` and follow light/dark theme. Font sizes fully tokenized (60+ sites), global keyboard focus ring + `prefers-reduced-motion`, dark-theme hardcoded colors fixed, aria-labels added to icon buttons. Tests held at 337
@@ -153,7 +155,6 @@ See [CHANGELOG.md](CHANGELOG.md) for full release notes.
 ### Deferred to future versions
 
 - Multi-day events (startDate + endDate)
-- Multi-window sync
 
 ---
 

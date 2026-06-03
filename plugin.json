@@ -2,7 +2,7 @@
   "name": "plugin-ChronicleX-vite-svelte",
   "author": "Aether",
   "url": "https://github.com/wj1002/plugin-ChronicleX-vite-svelte",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minAppVersion": "3.2.1",
   "disabledInPublish": false,
   "backends": [
@@ -30,5 +30,10 @@
   "keywords": [
     "ChronicleX",
     "ChronicleX任务管理"
-  ]
+  ],
+  "funding": {
+    "custom": [
+      "https://gitee.com/wj741208617/donate-page/raw/master/zs2.png"
+    ]
+  }
 }

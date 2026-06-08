@@ -6,6 +6,83 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.7.0] - 2026-06-08
+
+### Added
+
+- **自定义纪念日/倒计时**:自定义重要日期（生日、结婚纪念日等),支持公历/农历(复用 `lunar-javascript`)。独立的「纪念日」视图 tab——倒计时卡片列表,支持增删改;日历顶部栏显示最近 1 个纪念日倒计时(只读,点击进入纪念日 tab)。农历按真实历法:月/日下拉含闰月、大小月(29/30)按当年真实天数,不让选不存在的农历日。独立存档 `chroniclex-anniversaries.json`,不碰 Event 模型。
+
+> 纯函数 `domain/anniversary.ts`(日期解析/天数/查找/格式化,农历经 `lunar-javascript` 反查,闰月用负数月)+ `domain/lunar.ts`(参照农历年生成真实月份/天数:`getLunarMonthOptions`/`getLunarMonthDayCount`)+ 独立存档 `store/anniversary.ts` + 视图 `components/AnniversaryView.svelte`(倒计时卡片网格)+ 编辑器 `components/AnniversaryEditor.svelte`。存储格式 `L-MM-DD`(公历 `MM-DD`),闰月 token 加 `i` 前缀 `L-iMM-DD`(向后兼容)。CalendarView 第 5 个视图 tab(独立礼物图标入口),顶部栏只读跳转。UI 经 ui-ux-pro-max(全 `--chx-*` token,卡片 hover、reduced-motion、a11y aria-label)。subagent-driven(纯函数/组件全 TDD,闰月历法经独立 review 实测正确性 + 向后兼容)。测试 452 → **511**。
+
+---
+
+## [1.6.0] - 2026-06-05
+
+### Added
+
+- **版本更新弹窗**:更新插件后首次打开日历主页,自动弹出「更新说明」,展示本次更新要点,并提供「问题反馈」与「赞赏支持」入口。10 秒后自动关闭(鼠标悬停卡片暂停倒计时),也可手动关闭(× / 点遮罩 / Esc);**同一版本只弹一次**,首次安装弹「欢迎」。点链接后取消自动关闭,方便扫码/阅读。
+- **设置「关于」段**:设置面板底部新增「关于」,显示当前版本号,并提供「查看」按钮可随时手动调出更新说明弹窗(手动查看不倒计时)。
+
+> 实现:纯函数 `domain/changelog.ts`(解析 CHANGELOG 当前版本段)+ `domain/release.ts`(版本判定)+ 独立存档 `store/release.ts`(`chroniclex-meta.json` 记已读版本)+ 调起器 `libs/release-notes.ts`(挂 document.body,日历自动弹与设置手动查看共用)+ 组件 `components/ReleaseNotesModal.svelte`。UI 经 ui-ux-pro-max(Soft UI,全 `--chx-*` token,要点术语/描述分层、等宽全宽按钮、a11y 焦点管理)。测试 415 → **452**。
+
+---
+
+## [1.5.0] - 2026-06-05
+
+### Added
+
+- **笔记活动热力图**:复盘页概览模式新增「笔记活动」热力图(绿色系,区别于事项「完成热力图」),把思源文档的编辑时间映射到近一年日历,可视化写作节奏,与事项完成热力图形成「计划 vs 实际」对比。支持笔记本选择器(全部 / 单个开放笔记本)。新增纯函数 `domain/stats.ts#computeDocHeatmap`、API `siyuan/api.ts#fetchDocActivityData`(SQL 查 `blocks` 表文档块编辑时间)、组件 `components/_review/DocHeatmap.svelte`。注:思源 `blocks.updated` 仅存文档最后一次编辑时间,故语义为「最后编辑落在某天的文档数」。
+
+### Changed
+
+- **月视图事项状态进度条化**:事项条整条作为进度槽,按状态填充——待办 0%(空槽)/ 进行中 50%(填左半)/ 已完成 100%(满填)/ 已取消 灰满填 + 标题删除线。**填充色 = 优先级**(高红 / 中蓝 / 低绿),**填充量 = 状态**,两通道正交,一眼可辨每个事项的状态。纯 CSS 变量驱动,无新增元素。
+
+> 测试 399 → **414**(computeDocHeatmap×5 / fetchDocActivityData×6 / DocHeatmap×4)。
+
+---
+
+## [1.4.0] - 2026-06-04
+
+### Added
+
+- **看板视图(Kanban)**:复盘页面新增「概览/看板」切换,看板模式按状态(待办/进行中/已完成/已取消)分列显示事项卡片,支持拖拽跨列改变状态。新增纯函数 `domain/kanban.ts`(按状态分组/计算列宽)、组件 `KanbanBoard.svelte`/`KanbanColumn.svelte`/`KanbanCard.svelte`;复用现有 `EventCard` + Pointer Events 拖拽基础(`actions/draggable.ts`)。
+
+### Fixed
+
+- **公历「每年」重复曾误为「每天」重复**(数据正确性):选「每年」(非农历)重复的事项,因展开时规则缺 `byMonth`/`byMonthDay` 落入每日分支,月/周/日视图每天都冒该事项、提醒每天误触发。现编辑器产出公历 yearly 规则带 `byMonth`/`byMonthDay`,且展开层缺字段时从开始日自动派生(历史数据自愈)。
+- **重复规则健壮性**:畸形规则(weekly 缺星期 / monthly 缺月日 / yearly 缺月)不再静默当每日重复,改按声明频率从开始日派生;月 `byMonthDay=[31]`、公历每年 2/29 等短月情形 clamp 到当月最后一天(对齐农历)。
+- **资源与调度**:卸载时若设置弹窗仍开,补销毁其 Svelte 实例防泄漏;提醒调度长期无新到点时仍裁剪过期记录、且避免无谓写盘;节假日空存档时显式重置,不再沿用陈旧内存值。
+- **节假日响应式加载**:纯 Dock(不开日历 Tab)链路现也加载节假日;Dock 今日清单 / 日详情弹窗的节假日标记改为响应式,异步加载完成后自动显示。
+- **复盘页布局**:看板模式 4 列等高铺满可用高度、各列内部独立滚动;概览模式改全宽 2 列 bento(任务分布 / 拖延清单并排),完成热力图卡内居中。
+
+### Changed
+
+- **提醒计算性能**:提醒扫描每个事项的重复展开由 2 次降为 1 次,且只取首个实例(快路径),无提醒 / 已完成 / 已取消事项提前跳过。
+
+### Removed
+
+- 清理模板遗留死代码:`src/api.ts`(含禁止的直写文件路径)、`src/libs/promise-pool.ts`、`src/libs/const.ts`,及 `dialog.ts` 中未使用的 `inputDialog*`/`confirmDialog*`(约 830 行)。无行为变更。
+
+> 内部:全量代码审计修复 Critical 1 + Medium 9(详见 `docs/superpowers/audits/2026-06-04-code-audit.md`);测试 376 → **399**。
+
+---
+
+## [1.3.1] - 2026-06-04
+
+### Changed
+
+- **emoji 全部替换为 SVG 图标**:Dock 标题、节假日 chip(月详情 / 日视图)、移动端操作栏共 6 个 emoji(`📅`/`🎉`/`🔍`/`⚙️`)换为 **inline Lucide 风格 SVG**(新增 [src/components/_shared/Icon.svelte](src/components/_shared/Icon.svelte),`{#if name}` 分支内联真 `<path>`、`stroke` 跟随父元素 `currentColor` 主题色 token),视觉更专业统一(ui-ux-pro-max `no-emoji-icons`)。语义映射:`calendar` / `party-popper`(法定假日)/ `calendar-clock`(调休上班)/ `search` / `filter`(⚙️ 实为筛选)。
+
+### Fixed
+
+- **图标渲染成实心黑块**:inline `<svg fill="none">` 被思源全局 `svg { fill }` CSS 规则覆盖(CSS 永远胜过 presentation attribute),描边图标被填实;将 `fill`/`stroke` 移到 `.chx-icon` scoped CSS(Svelte hash class 特异性压过宿主)修正。
+
+### 其它
+
+- **用 inline SVG 而非思源 symbol sprite**:消除「sprite id 需真机运行时验证、构建期无法自测」这一把该项拖到 v2 的根本障碍。纯展示组件 + 一处 bug 修,无逻辑 / 数据模型变更。测试 372 → **376**(`Icon` ×4:svg 属性 / 各 name 渲染非空 / size / 未知 name 不崩)。真机已验收。
+
+---
+
 ## [1.3.0] - 2026-06-03
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "plugin-ChronicleX-vite-svelte",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "type": "module",
   "description": "ChronicleX plugin for SiYuan (https://b3log.org/siyuan), built with vite and svelte",
   "repository": "",

@@ -35,7 +35,7 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 - **Auto-Record**: `completedAt` timestamp on completion for review
 
 ### 🔗 SiYuan Document Linking (Headline Feature)
-- **One-Click Create Doc**: Pick default notebook on first use, auto-used thereafter
+- **One-Click Create Doc**: Pick default notebook on first use, auto-used thereafter; doc path supports template variables for auto date-based filing
 - **Auto-Prefill**: New docs filled with event meta block (date / status / priority / tags / ID)
 - **Bind Existing Doc**: Full-text search picker with 250ms debounce
 - **Unbind**: Only clears association, doesn't delete SiYuan doc
@@ -115,7 +115,7 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 | Setting | Default | Description |
 |---|---|---|
 | Default notebook | (unset) | Where "create doc" stores generated docs |
-| Default doc path | `/ChronicleX` | Relative path inside the notebook |
+| Default doc path | `/ChronicleX` | Relative path inside the notebook, supports template variables: `{{date}}` `{{year}}` `{{month}}` `{{day}}` `{{title}}` and `{{now | date "YYYY-MM-DD"}}` formatting |
 | Week starts on | Monday | First column of the calendar |
 | Priority colors | red/blue/green | Pick a preset color per high/normal/low; event bars and editor follow in real time |
 | Enable reminders | On | Master switch for due-time system notifications |
@@ -138,13 +138,11 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v1.8.1** (2026-06-10): **Doc path template variables** — the "Default doc path" setting now supports template variables for automatic date-based filing. Supports `{{date}}` `{{year}}` `{{month}}` `{{day}}` `{{title}}` simple variables and `{{now | date "YYYY-MM-DD"}}` custom date formatting pipes; paths are auto-normalized. See [CHANGELOG](CHANGELOG.md). Tests 540 → 555
+- **v1.8.0** (2026-06-10): **Time-distribution proportion donut** — the Review overview gains a "Time distribution" donut card (conic-gradient) that shows event composition by **count proportion**, answering "where did this period's events cluster". A single ring with tabs to switch between three dimensions — **status / priority / tag** — following the existing week / month / year / all selector at the top. Status and priority show all fixed segments (including 0% ones); the tag dimension aggregates the Top 8 by occurrence with the rest folded into an "Other" segment, showing only non-zero ones. The ring center shows the total plus a unit ("items" for status/priority, "times" for tag), and each legend row shows count + percentage. Complements the existing "Task distribution" horizontal bars (absolute count) with a proportion view. See [CHANGELOG](CHANGELOG.md). Tests 526 → 540
 - **v1.7.1** (2026-06-09): **Fix — statutory holiday & observance now shown together** — previously when a day was both a statutory holiday (e.g. a Dragon-Boat make-up off-day) and an observance (e.g. Father's Day, the 3rd Sunday of June), the statutory one won and the observance was dropped, so Jun 21 showed only "Summer Solstice + Dragon Boat Festival" and Father's Day was missing — inconsistent with the top "holidays this month" bar. Now both render: the statutory one keeps its off/work badge + background + name, the observance shows on its own line. Month and week views both fixed. See [CHANGELOG](CHANGELOG.md). Tests 511 → 526
-- **v1.7.0** (2026-06-08): **Custom anniversaries / countdowns** — a dedicated "Anniversaries" view tab (the 5th view, with its own gift-icon entry) showing a countdown card list with add/edit/delete; the top bar keeps only the nearest one (read-only, click to jump to the tab). Solar/lunar dates follow the real lunar calendar: month/day dropdowns include leap months and true month lengths (29/30 days). Stored in a standalone `chroniclex-anniversaries.json`. See [CHANGELOG](CHANGELOG.md). Tests 485 → 511
-- **v1.6.0** (2026-06-05): **Release-notes popup** — after updating the plugin, the first time you open the calendar home page a "What's new" modal pops up with this version's highlights plus "Feedback" and "Donate" links; it auto-closes after 10s (hovering the card pauses the countdown), or close it manually (× / click backdrop / Esc). Shows once per version, with a "Welcome" variant on first install. The settings panel gains an "About" section with a "View" button to reopen it anytime. See [CHANGELOG](CHANGELOG.md). Tests 415 → 452
-- **v1.5.0** (2026-06-05): **Note-activity heatmap + month-view progress bars** — the Review overview gains a green "Note activity" heatmap that maps SiYuan document edit times onto a one-year calendar, forming a "plan vs. actual" contrast with the event "completion heatmap"; includes a notebook selector to filter. Month-view event bars become status progress slots (todo empty / doing half-filled / done full / cancelled gray-full + strikethrough, fill color follows priority), making each event's status readable at a glance. See [CHANGELOG](CHANGELOG.md). Tests 399 → 414
-- **v1.4.0** (2026-06-04): **Kanban view + stability overhaul** — the Review page gains a "Kanban" mode that groups event cards into columns by status (todo / doing / done / cancelled) with drag-to-change-status across columns; plus a fix for an important data-correctness bug (Gregorian "yearly" recurrence was wrongly expanding to "daily", firing reminders every day), and a batch of fixes for recurrence robustness, resource leaks, reactive holiday loading and reminder performance; Review layout polish (Kanban fills height, overview full-width 2-column, heatmap centered). Removed ~830 lines of template dead code. See [CHANGELOG](CHANGELOG.md). Tests 376 → 399
 
-> Earlier releases (v1.3 icon polish / lunar recurrence, v1.2 multi-window sync, v1.1 lunar display, v1.0 stable UI redesign, v0.8–v0.11 week-day views / reminders / custom colors / import-export, v0.7 doc reverse-lookup, v0.6 mobile support, v0.5 drag-to-reschedule, v0.3–v0.4 iOS-style redesign, v0.2 recurring events / holidays, v0.1 base calendar) — see [CHANGELOG.md](CHANGELOG.md).
+> Earlier releases (v1.7 anniversaries/countdowns, v1.6 release-notes popup, v1.5 note-heatmap/progress bars, v1.4 kanban, v1.3 icon polish / lunar recurrence, v1.2 multi-window sync, v1.1 lunar display, v1.0 stable UI redesign, v0.8–v0.11 week-day views / reminders / custom colors / import-export, v0.7 doc reverse-lookup, v0.6 mobile support, v0.5 drag-to-reschedule, v0.3–v0.4 iOS-style redesign, v0.2 recurring events / holidays, v0.1 base calendar) — see [CHANGELOG.md](CHANGELOG.md).
 
 ### Deferred to future versions
 

@@ -2,7 +2,7 @@
   "name": "plugin-ChronicleX-vite-svelte",
   "author": "Aether",
   "url": "https://github.com/wj1002/plugin-ChronicleX-vite-svelte",
-  "version": "1.7.1",
+  "version": "1.8.1",
   "minAppVersion": "3.2.1",
   "disabledInPublish": false,
   "backends": [

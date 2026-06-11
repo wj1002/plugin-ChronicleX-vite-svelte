@@ -6,6 +6,34 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.9.0] - 2026-06-11
+
+### Added
+
+- **事项智能排序**:今日清单按截止日紧迫度 + 优先级 + 事项年龄自动排序。公式 `score = urgencyScore + priorityScore + ageScore`，过期事项最高优先，done/cancelled 沉底。设置面板新增「智能排序」开关，默认关闭。
+
+> 纯函数 `domain/smart-sort.ts`(`computeSmartScore`)+ `domain/search.ts`(`sortEventsSmart`)+ `TodayList.svelte`/`DayDetailDialog.svelte` 集成。测试 555 → **570**。
+
+- **完成庆祝动画**:标记事项完成时播放粒子爆炸动画。12 个粒子从锚点中心放射，颜色跟随优先级，动画 0.8s，`prefers-reduced-motion` 时跳过。设置面板新增「完成庆祝动画」开关，默认开启。
+
+> 纯函数 `domain/confetti.ts`(`spawnConfetti`)+ `EventCard.svelte` 集成。测试 570 → **587**。
+
+### Fixed
+
+- **「默认文档路径」存储损坏导致建文档失败**:设置面板保存路径时漏 `await` 异步的 `takeAndSave`,把 Promise 对象写入配置 → 序列化成 `{}`。表现为重开设置显示 `[object Object]`、一键建文档报 `t.replace is not a function` 且无法创建(改回默认路径仍失败)。补 `await`,并在 `normalizeConfig` 增加 `defaultDocPath` / `defaultNotebookId` / `weekStart` 类型守卫,旧损坏配置 reload 自动复原。
+
+- **文档路径反斜杠与缺前导斜杠容错**:`resolveDocPath` 现自动把反斜杠 `\` 转正斜杠 `/`、自动补前导 `/`。Windows 习惯路径(如 `\2026\`)及缺前导斜杠(如 `2026`)现可正常建文档,不再静默失败。
+
+- **月/周/日视图排序与日详情弹窗不一致**:智能排序此前只接入了今日清单和日详情弹窗——月视图格子完全不排序(按存储原始顺序渲染 bar),周/日视图恒用常规排序,导致开启「智能排序」后月视图 bar 顺序与点开当日弹窗的顺序相反。抽出统一排序入口 `sortDayEvents` / `bucketEventsByDate`,月 / 周 / 日视图 + 弹窗 + 今日清单全部共用,逐日顺序对齐。
+
+> `index.ts` 设置回调补 `await`;`domain/config.ts#normalizeConfig` 三字段类型守卫;`domain/template.ts#resolveDocPath` 路径规范化前置反斜杠转换 + 强制前导斜杠;`domain/search.ts` 新增 `sortDayEvents`/`bucketEventsByDate` 统一排序入口,`MonthGrid`/`WeekView`/`DayView`/`DayDetailDialog`/`TodayList` 全部改用。测试 587 → **611**。
+
+### Changed
+
+- **问题反馈入口改为链滴社区帖子**:版本更新弹窗「问题反馈」按钮与 README 反馈链接从腾讯文档问卷换为 [链滴社区帖子](https://ld246.com/article/1780972949428),便于公开讨论与回复。
+
+---
+
 ## [1.8.1] - 2026-06-10
 
 ### Added

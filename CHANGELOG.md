@@ -6,6 +6,44 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.10.1] - 2026-06-12
+
+### Fixed
+
+- **月历不显示重复事项**:周视图和日视图均调用 `expandEventsInRange` 展开重复事项实例,但月历(MonthGrid)直接用 `$eventsStore.filter(filterFn)` 读原始列表,导致重复事项的展开实例在月历上不可见。v0.8.0 引入周/日视图时已标注「月视图仍不展开,已知不一致」,现统一修复。
+
+> `MonthGrid.svelte` 新增 `import { expandEventsInRange }`,`filteredEvents` 改为 `expandEventsInRange($eventsStore, grid[0], grid[grid.length - 1]).filter(filterFn)`,与 WeekView/DayView 保持一致。
+
+### 致谢
+
+- 感谢阳、Eiffo、GZS、AiurQ、桂的反馈与支持
+
+---
+
+## [1.10.0] - 2026-06-12
+
+### Added
+
+- **默认创建文档开关**:设置面板新增「默认创建文档」开关(默认**关**)。开启后,保存新建事项时自动创建并绑定思源文档,无需手动点「一键建文档」。**未配置默认笔记本**时飘 toast「未配默认笔记本,跳过自动建文档」静默跳过、**不打断保存**;**编辑已有事项不触发**(仅新建时);手动「一键建文档」按钮行为不变。
+
+> 纯函数 `domain/doc-create.ts#shouldAutoCreateDoc`(开关开 && 标题非空 && 未绑文档 才建)+ EventEditor 把建文档抽成单一核心 `createDocForEvent({interactive})`——手动入口无默认笔记本可弹选择、自动入口无笔记本静默跳过 + `config` 新增 `autoCreateDoc` 字段(`normalizeConfig` 守卫)+ `index.ts` 设置项。
+
+- **双击侧边栏日期打开每日笔记**:双击 Dock 迷你日历某天,打开 / 创建思源**每日笔记**。**今天**→ 幂等创建或打开;**历史日**→ SQL 反查当天已有每日笔记(`custom-dailynote-YYYYMMDD`),有则打开、无则提示「暂无每日笔记」(不补建历史);**无任何笔记本配置每日笔记存放路径**→ 提示去思源配置。**单击仍切换当日事项列表**,语义不变。设置面板新增「每日笔记笔记本」选择(留空 = 用第一个已配置每日笔记的笔记本)。
+
+> 纯函数 `domain/daily-note.ts`(`dailyNoteAttrName` + `buildDailyNoteQuery`,**box + date 双正则校验防注入**)+ 思源 API 封装 `siyuan/api.ts`(`createDailyNote` / `getNotebookConf` / `queryDailyNoteByDate`)+ `MiniCalendar.svelte` 双击回调 + `DockView.svelte` 编排(笔记本选取:配置项命中则用、否则首个已配置)+ `config` 新增 `dailyNoteBox` 字段。
+
+- **文档路径模板补两位年(`YY`)**:文档路径 `{{now | date "..."}}` 管道新增 `YY`(两位年)token,可拼 `YYMMDD` 等紧凑无分隔格式;`YYYY`(四位年)向后兼容不回归。
+
+> 纯函数 `domain/template.ts` 日期 token 表加 `YY`,正则 alternation `YYYY` 先于 `YY` 保证长 token 优先匹配。
+
+- **侧边栏迷你日历底部补二十四节气**:Dock 迷你日历底部节假日列表新增二十四节气项(中性灰「节」标),与法定假日 / 纪念日并列按日期排序;日历格子不变(防拥挤,方案 C),受「显示农历」开关控制。
+
+> 纯函数 `domain/lunar.ts#getSolarTermsForMonth`(遍历公历月取节气)+ `MiniCalendar.svelte` 底部列表渲染 `--chip--term` 样式。
+
+> 四项合计测试 611 → **636**(#18/#19:config ×6 / shouldAutoCreateDoc ×5 / daily-note ×4;#15/#16:template / lunar)。subagent-driven 执行(#18/#19 6 task 纯函数全 TDD,逐 task spec 评审 + final review APPROVED;#15/#16 独立线 TDD 完成)。
+
+---
+
 ## [1.9.0] - 2026-06-11
 
 ### Added

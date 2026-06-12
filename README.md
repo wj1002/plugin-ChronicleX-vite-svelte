@@ -9,7 +9,7 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 ## ✨ Features
 
 ### 📅 Dual Entry Points
-- **Dock Sidebar**: Always-on right panel with mini calendar + selected-day list (left-click a mini cell to browse across days) + collapsible overdue group
+- **Dock Sidebar**: Always-on right panel with mini calendar + selected-day list (left-click a mini cell to browse across days, **double-click a date to open/create the SiYuan daily note**) + collapsible overdue group
 - **Tab Full-Screen Month View**: 7×6 grid (42 cells) with per-day **event title bars** (priority-colored left edge; up to 3 per cell + "+N"; done/cancelled dimmed but visible)
 - **Top-Bar Entry + Shortcut**: Click the 📅 top-bar icon to open the full-screen Tab; or trigger the command via `⇧⌘L` / `Shift+Ctrl+L`
 
@@ -36,11 +36,13 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 
 ### 🔗 SiYuan Document Linking (Headline Feature)
 - **One-Click Create Doc**: Pick default notebook on first use, auto-used thereafter; doc path supports template variables for auto date-based filing
+- **Auto-Create Doc (v1.10.0, optional, off by default)**: enable the "Default create doc" setting to auto-create and bind a doc when saving a new event; silently skips with a toast when no default notebook is set (without blocking the save); not triggered when editing existing events
 - **Auto-Prefill**: New docs filled with event meta block (date / status / priority / tags / ID)
 - **Bind Existing Doc**: Full-text search picker with 250ms debounce
 - **Unbind**: Only clears association, doesn't delete SiYuan doc
 - **Open Linked Doc**: Click 📄 to jump (toast on missing/deleted)
 - **Reverse lookup (v0.7.0, trigger fixed in v0.7.2)**: from a SiYuan **doc-tree right-click menu**, open "ChronicleX 关联事项 (N)" to list events linking to that doc; each row can edit the event or jump to its date on the calendar
+- **Open Daily Note (v1.10.0)**: double-click a Dock mini-calendar date to open/create the SiYuan **daily note** — today is created idempotently, a past day is SQL-looked-up (opens if it exists, prompts otherwise without back-filling); prompts to configure when no notebook has a daily-note path set. A "Daily-note notebook" setting picks which notebook to use (empty = first configured)
 
 ### 🔁 Recurring Events
 - **Frequency**: Daily / Weekly / Monthly / Yearly
@@ -138,12 +140,13 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v1.10.1** (2026-06-12): **Fix — recurring events now shown in month view** — week and day views called `expandEventsInRange` to expand recurring event instances, but the month view (MonthGrid) read the raw store directly, so recurring instances were invisible in the month grid. Known inconsistency since v0.8.0, now unified. See [CHANGELOG](CHANGELOG.md). Tests 636
+- **v1.10.0** (2026-06-12): **Default create-doc toggle + double-click sidebar date to open daily note** — enabling the "Default create doc" setting auto-creates and binds a SiYuan doc when saving a new event (silently skips without blocking the save when no default notebook is set; not triggered when editing existing events); double-clicking a Dock mini-calendar date opens/creates the SiYuan daily note (today created idempotently, a past day SQL-looked-up — opens if present, prompts otherwise without back-filling, prompts to configure when none set), while single-click still switches the day list. The daily-note SQL lookup is guarded by box + date regex validation against injection. This release also adds a `YY` (two-digit year) token to the doc-path template for compact formats like `YYMMDD`, and lists the 24 solar terms at the bottom of the sidebar mini-calendar (controlled by the lunar toggle). See [CHANGELOG](CHANGELOG.md). Tests 611 → 636
 - **v1.9.0** (2026-06-11): **Smart task sorting + completion celebration** — Today list can auto-sort by deadline urgency + priority + task age (settings toggle, off by default); marking a task done plays a particle-burst animation (color follows priority, skipped under `prefers-reduced-motion`, on by default). **Fixes**: the "Default doc path" save path missed `await`, storing a Promise object that caused `[object Object]` display and a `t.replace is not a function` failure when creating docs; `normalizeConfig` adds type guards for `defaultDocPath` / `defaultNotebookId` / `weekStart`; `resolveDocPath` now converts backslashes `\` to `/` and prepends a leading `/` (Windows-style paths like `\2026\` now create docs correctly). See [CHANGELOG](CHANGELOG.md). Tests 555 → 605
-- **v1.8.1** (2026-06-10): **Doc path template variables** — the "Default doc path" setting now supports template variables for automatic date-based filing. Supports `{{date}}` `{{year}}` `{{month}}` `{{day}}` `{{title}}` simple variables and `{{now | date "YYYY-MM-DD"}}` custom date formatting pipes; paths are auto-normalized. See [CHANGELOG](CHANGELOG.md). Tests 540 → 555
 - **v1.8.0** (2026-06-10): **Time-distribution proportion donut** — the Review overview gains a "Time distribution" donut card (conic-gradient) that shows event composition by **count proportion**, answering "where did this period's events cluster". A single ring with tabs to switch between three dimensions — **status / priority / tag** — following the existing week / month / year / all selector at the top. Status and priority show all fixed segments (including 0% ones); the tag dimension aggregates the Top 8 by occurrence with the rest folded into an "Other" segment, showing only non-zero ones. The ring center shows the total plus a unit ("items" for status/priority, "times" for tag), and each legend row shows count + percentage. Complements the existing "Task distribution" horizontal bars (absolute count) with a proportion view. See [CHANGELOG](CHANGELOG.md). Tests 526 → 540
 - **v1.7.1** (2026-06-09): **Fix — statutory holiday & observance now shown together** — previously when a day was both a statutory holiday (e.g. a Dragon-Boat make-up off-day) and an observance (e.g. Father's Day, the 3rd Sunday of June), the statutory one won and the observance was dropped, so Jun 21 showed only "Summer Solstice + Dragon Boat Festival" and Father's Day was missing — inconsistent with the top "holidays this month" bar. Now both render: the statutory one keeps its off/work badge + background + name, the observance shows on its own line. Month and week views both fixed. See [CHANGELOG](CHANGELOG.md). Tests 511 → 526
 
-> Earlier releases (v1.7 anniversaries/countdowns, v1.6 release-notes popup, v1.5 note-heatmap/progress bars, v1.4 kanban, v1.3 icon polish / lunar recurrence, v1.2 multi-window sync, v1.1 lunar display, v1.0 stable UI redesign, v0.8–v0.11 week-day views / reminders / custom colors / import-export, v0.7 doc reverse-lookup, v0.6 mobile support, v0.5 drag-to-reschedule, v0.3–v0.4 iOS-style redesign, v0.2 recurring events / holidays, v0.1 base calendar) — see [CHANGELOG.md](CHANGELOG.md).
+> Earlier releases (v1.8 doc path templates / time distribution, v1.7 anniversaries/countdowns, v1.6 release-notes popup, v1.5 note-heatmap/progress bars, v1.4 kanban, v1.3 icon polish / lunar recurrence, v1.2 multi-window sync, v1.1 lunar display, v1.0 stable UI redesign, v0.8–v0.11 week-day views / reminders / custom colors / import-export, v0.7 doc reverse-lookup, v0.6 mobile support, v0.5 drag-to-reschedule, v0.3–v0.4 iOS-style redesign, v0.2 recurring events / holidays, v0.1 base calendar) — see [CHANGELOG.md](CHANGELOG.md).
 
 ### Deferred to future versions
 

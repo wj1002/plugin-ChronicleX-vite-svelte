@@ -10,7 +10,7 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 
 ### 📅 Dual Entry Points
 - **Dock Sidebar**: Always-on right panel with mini calendar + selected-day list (left-click a mini cell to browse across days, **double-click a date to open/create the SiYuan daily note**) + collapsible overdue group
-- **Tab Full-Screen Month View**: 7×6 grid (42 cells) with per-day **event title bars** (priority-colored left edge; up to 3 per cell + "+N"; done/cancelled dimmed but visible)
+- **Tab Full-Screen Month View**: 7×6 grid (42 cells) with per-day **event title bars** (priority-colored left edge; up to 5 per cell + "+N"; done/cancelled dimmed but visible)
 - **Top-Bar Entry + Shortcut**: Click the 📅 top-bar icon to open the full-screen Tab; or trigger the command via `⇧⌘L` / `Shift+Ctrl+L`
 
 ### 🖐️ Drag & Quick Actions
@@ -52,6 +52,9 @@ A **calendar-based task manager** for SiYuan: log todos on the calendar, track t
 - **Scope Editing**: Single instance / this date onward / entire sequence
 
 ### 🎨 UI Design
+- **Liquid Glass (v1.11.0)**: a global liquid-glass design language — translucent frosted cards + colorful mesh-gradient backdrop refraction + top highlight + dynamic light, unified 16px radius, auto light/dark
+- **Liquid Glass / Classic toggle (v1.11.0)**: a "Liquid glass" setting flips the whole UI back to the classic opaque style (scroll containers like the Dock disable `backdrop-filter` to avoid jank)
+- **Timeline Replay (v1.11.0)**: a "Replay" tab in the review page replays day-by-day completion over a chosen range — slider + play/pause/step, auto-skips empty days
 - **EventCard**: Priority bar + tag pills + 4-state visuals
 - **EventEditor**: Grouped cards + SegmentedControl
 - **DayDetailDialog**: Holiday chips + empty-state CTA button
@@ -140,6 +143,7 @@ Settings → Marketplace → Downloaded → ChronicleX → gear:
 
 ### Released
 
+- **v1.11.0** (2026-06-16): **Liquid Glass design + Timeline Replay** — a global liquid-glass design language (translucent frosted cards + colorful mesh refraction + highlight/dynamic light + unified 16px radius, light/dark adaptive) across the main panel / review / anniversaries / dialogs / Dock; a "Liquid glass" setting **toggles between liquid-glass and classic styles**; the review page gains a "**Timeline Replay**" tab (day-by-day replay over a range, slider + play/pause/step). Also: unified frosted field controls, a custom ScrollSelect replacing the long native dropdown, popovers portaled out of glass containers; **fixes** for dialog top-corner white triangles, Dock scroll jank (disabled `backdrop-filter`), kanban in-column scroll + card squish, and deformed toggles. See [CHANGELOG](CHANGELOG.md). Tests → 649
 - **v1.10.1** (2026-06-12): **Fix — recurring events now shown in month view** — week and day views called `expandEventsInRange` to expand recurring event instances, but the month view (MonthGrid) read the raw store directly, so recurring instances were invisible in the month grid. Known inconsistency since v0.8.0, now unified. See [CHANGELOG](CHANGELOG.md). Tests 636
 - **v1.10.0** (2026-06-12): **Default create-doc toggle + double-click sidebar date to open daily note** — enabling the "Default create doc" setting auto-creates and binds a SiYuan doc when saving a new event (silently skips without blocking the save when no default notebook is set; not triggered when editing existing events); double-clicking a Dock mini-calendar date opens/creates the SiYuan daily note (today created idempotently, a past day SQL-looked-up — opens if present, prompts otherwise without back-filling, prompts to configure when none set), while single-click still switches the day list. The daily-note SQL lookup is guarded by box + date regex validation against injection. This release also adds a `YY` (two-digit year) token to the doc-path template for compact formats like `YYMMDD`, and lists the 24 solar terms at the bottom of the sidebar mini-calendar (controlled by the lunar toggle). See [CHANGELOG](CHANGELOG.md). Tests 611 → 636
 - **v1.9.0** (2026-06-11): **Smart task sorting + completion celebration** — Today list can auto-sort by deadline urgency + priority + task age (settings toggle, off by default); marking a task done plays a particle-burst animation (color follows priority, skipped under `prefers-reduced-motion`, on by default). **Fixes**: the "Default doc path" save path missed `await`, storing a Promise object that caused `[object Object]` display and a `t.replace is not a function` failure when creating docs; `normalizeConfig` adds type guards for `defaultDocPath` / `defaultNotebookId` / `weekStart`; `resolveDocPath` now converts backslashes `\` to `/` and prepends a leading `/` (Windows-style paths like `\2026\` now create docs correctly). See [CHANGELOG](CHANGELOG.md). Tests 555 → 605

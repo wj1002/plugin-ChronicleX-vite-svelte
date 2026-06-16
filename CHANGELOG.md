@@ -6,6 +6,53 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.11.0] - 2026-06-16
+
+> 🪟 大版本视觉升级:全局 **Liquid Glass 液态玻璃**设计语言 + **时间线回放**复盘新维度。
+
+### Added
+
+- **Liquid Glass 液态玻璃设计**:在 iOS-style token 体系上引入液态玻璃形态——半透明磨砂卡(`backdrop-filter` 模糊 + 饱和增强)、彩色 mesh 渐变背景供玻璃折射、顶部高光与动态光效、统一 16px 圆角。主面板 / 复盘 / 纪念日 / 弹窗 / Dock 全线接入,配色仍全程 alias 思源 `var(--b3-*)`,自动跟随明暗主题。
+
+> 新增 `styles/_glass.scss`(`.chx-glass` / `.chx-glass-heavy` / `.chx-glass-bg` 全局类)+ `ios-tokens.scss` 液态玻璃 token(玻璃层级 / 模糊 / 高光 / 阴影 / mesh 渐变)+ `utils/glass-effect.ts`(rAF 节流鼠标光效)。`actions/portal.ts` 把 DatePicker/TimePicker/ScrollSelect 弹层 portal 到 body,逃出玻璃卡 `backdrop-filter` 造成的 fixed 定位陷阱。
+
+- **液态玻璃 / 经典风格切换**:设置面板「常规」新增「液态玻璃效果」开关(默认开)。关闭后全局回退经典不透明 Soft UI 风格——`backdrop-filter` 关闭、卡片还原实底、mesh 抹平。挂 `html.chx-classic` class 由全局 CSS 统一接管,覆盖所有面板与弹窗。
+
+> `config` 加 `liquidGlass` 字段(`normalizeConfig` 守卫,默认 true);`index.ts` `applyGlassMode` 在 onload + configStore 订阅时 toggle `html.chx-classic`;`_glass.scss` 经典段还原卡片 + 抹平 `--chx-glass-gradient`(一处覆盖类与内联用法)。测试 +4。
+
+- **时间线回放**:复盘页新增「回放」tab,选时间段逐天回放事项完成情况,像幻灯片回顾。滑块拖拽 + 播放 / 暂停 / 步进,自动跳过无事项天,跟随 period 选择器决定范围。
+
+> 纯函数 `domain/timeline.ts`(`buildTimeline` / `cumulativeStats`)+ 组件 `TimelineReplay.svelte`。测试 636 → **646**。
+
+- **统一 frosted field 表单控件**:日期 / 时间 / 提醒 / 标签 / 重复等编辑控件统一为「透明底 + 描边 + 聚焦环」的玻璃表单语言,叠在玻璃卡上不发闷;SegmentedControl 选中态由实色块改为软 tint 药丸;原生超长农历「日」下拉换成自定义可滚动 `ScrollSelect`(限高 + 内部滚动 + 弹层 portal)。
+
+> 新增 `ios-tokens.scss` 的 `--chx-field-*` token + `_shared/ScrollSelect.svelte`;DatePicker / TimePicker / EventFormAdvanced / AnniversaryEditor 接入。
+
+### Changed
+
+- **Dock 跟进液态玻璃**:Dock 根挂 mesh,MiniCalendar 包玻璃卡,TodayList 去掉外层不透明卡(内部分组本就是玻璃,消除双层发闷);Dock 作用域玻璃底色提到 50%,窄边栏饱和 mesh 下卡片读得出磨砂面;header 去硬质分隔线,add 按钮改 24px 圆 + 隐形触摸区。
+- **日期格圆角边框 + 间距**:月视图每格补圆角边框,工具栏 / 节假日栏间距优化;月视图空间利用优化(格高 90→100px,每格事项标题条上限 **3 → 5** 条,超出仍显「+N」)。
+- **组件拆分**:CalendarView 与 EventEditor 拆为子组件(EventForm{Basic,Status,Advanced} / CalendarToolbar / CalendarHolidays 等),便于维护。
+
+### Fixed
+
+- **弹窗顶角白三角**:DayDetailDialog / EventEditor 的玻璃卡 16px 圆角与外层思源 Dialog 方角不吻合,顶部露三角 + 高光 sliver。改铺满 mesh、无 border 无圆角、宽度填满;DayDetailDialog 卡内去掉与标题栏重复的日期。
+- **Dock 打开 / 滚动卡顿**:Dock 是滚动容器,毛玻璃每帧重算模糊导致卡顿。其玻璃卡背后只是平滑 mesh,blur 视觉上几乎无差异,故 Dock 内关闭 `backdrop-filter`,改半透明磨砂底 + mesh,零 GPU 模糊成本。
+- **复盘 / 看板**:回放播放器条布局重排(控件行 + 滑块分层、导航按钮对齐);看板列条数超高时**列内**滚动而非撑大整页;看板卡片防 flex 压扁变形。
+- **开关 / 按钮变形**:HolidaySettings 5 个开关、纪念日「每年重复」开关此前用 `padding + 负 margin` 撑触摸区,在非方形控件上把 slider 撑变形 → 改正;月视图添加按钮与相邻格子重叠修复。
+- **选择器弹层被玻璃容器困住**:玻璃卡的 `backdrop-filter` 给 `position:fixed` 子元素造了 containing block,DatePicker/TimePicker 弹层被困 / 裁切打不开 → 用 portal action 移到 body 解决。
+
+### 构建
+
+- `_glass.scss` 由 Sass `@extend`(Svelte 不支持)改为纯 CSS class 实现,解决编译不输出问题。
+- 测试 → **650 全绿**(DayCell「最多 N 条 +N」溢出测试与 README 对齐到 maxBars 3→5 的现状)。
+
+### 致谢
+
+- 感谢阳、Eiffo、GZS、AiurQ、桂的反馈与支持
+
+---
+
 ## [1.10.1] - 2026-06-12
 
 ### Fixed

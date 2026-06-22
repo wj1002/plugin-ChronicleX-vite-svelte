@@ -6,6 +6,24 @@ ChronicleX 所有可见变更记录在此文件。
 
 ---
 
+## [1.12.0] - 2026-06-22
+
+### Added
+
+- **自动归档**:已完成 / 已取消事项超过 N 天自动从日常视图隐藏,统计数据保留。设置面板新增「自动归档」开关(默认开)和「归档天数」(1-365,默认 30)。插件启动及配置变更时自动执行归档扫描。
+
+> 纯函数 `domain/archive.ts`(`shouldArchive` / `archiveEvents`,时间锚点 `completedAt` → `updatedAt` fallback)+ `store/events.ts#runAutoArchive`(批量标记 `archived:true`)+ `unarchiveEvent`(单条恢复)+ `Config` 新增 `autoArchiveEnabled` / `autoArchiveDays`(`normalizeConfig` 守卫)+ `Event` 新增 `archived` 字段。月视图 / 今日清单 / 日详情 / 复盘 / 智能排序全线过滤归档事项,归档在排序中沉底最深。设置面板「数据」段新增「管理已归档」弹窗(查看 / 恢复)。测试 650 → **671**。
+
+---
+
+## [1.11.1] - 2026-06-18
+
+### Fixed
+
+- **设置面板优先级色块重叠拥挤**:「颜色」段高 / 普通 / 低三级的 8 色预设色块,此前用 `padding: 8px; margin: -8px` 把 28px 色块的触摸目标扩到 44×44,但后补的 `padding: 0` 只覆盖了 padding、负 margin 残留——相邻色块被两侧 `-8px` 互拉、flex `gap: 8px` 被吃成净负值,色块互相重叠显拥挤。删除负 margin、`gap` 8 → 10px、补 `box-sizing: border-box`,色块恢复正常间距。
+
+---
+
 ## [1.11.0] - 2026-06-16
 
 > 🪟 大版本视觉升级:全局 **Liquid Glass 液态玻璃**设计语言 + **时间线回放**复盘新维度。
